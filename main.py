@@ -1,24 +1,6 @@
-from flask import Flask, request, render_template, redirect, session, flash
-from flask_sqlalchemy import SQLAlchemy 
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:root@localhost:8889/build-a-blog'
-app.config['SQLALCHEMY_ECHO']=True
-
-db = SQLAlchemy(app)
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    post = db.Column(db.String(255))
-    content = db.Column(db.String(10000))
-
-    def __init__(self, post, content):
-        self.post = post
-        self.content = content
-
-
-
+from flask import request, render_template, redirect, session, flash
+from app import db, app
+from models import Post
 
 @app.route("/", methods = ["POST", "GET"])
 def index():
@@ -44,11 +26,15 @@ def new():
             new_post = Post(title, content)
             db.session.add(new_post)
             db.session.commit()
-            return redirect("/?=" + title)   
     else:
         return render_template("new_post.html", error=error)
 
+@app.route("/<id>")
 
+id = request.get.args("id")
+def new_post(id):
+
+    return render_template("post.html")
 
 if __name__=="__main__":
     app.run()
