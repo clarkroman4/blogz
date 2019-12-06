@@ -3,7 +3,7 @@
 {%block content%}
 
     {% for post in posts%}
-    <h2>{{post.post}}</h2>
+    <h2><a href="/?id={{post.id}}">{{post.title}}</a></h2>
     <main>
         <p>{{post.content}}</p>
     </main>
