@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, session, flash
+from flask import request, render_template, redirect, session, flash, url_for
 from app import db, app
 from models import Post, User
 from hashutils import check_hash, make_hash, make_salt
@@ -95,7 +95,7 @@ def login():
                 return render_template("login.html", error=error)
             else:
                 error = "Password incorrect."
-                return render_template("login.html", error=error)
+                return render_template("login.html", error=error, username=username)
     else:
         error=""
         return render_template("login.html")

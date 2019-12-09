@@ -2,12 +2,15 @@
 {%block content%}
 <form action ="/login" method= "POST">
     <label for="username" >Username</label>
-    <input type="text" name="username">
+    <input class= "input" type="text" name="username">
     <br>
     <label for="password">Password</label>
-    <input type="password" name="password">
+    <input class="input" type="password" name="password">
     <span class="error">{{error}}</span>
     <br>
     <input type="submit" name="submit" value="Login">
 </form>
+
+<p>Don't have an account? <a href="/register">Create one now!</a></p>
+
 {% endblock %}

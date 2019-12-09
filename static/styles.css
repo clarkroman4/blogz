@@ -1,0 +1,28 @@
+html{
+    background: lightblue;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.error{
+    color: red;
+}
+
+h1{
+    position: center;
+}
+
+h2{
+    position: center;
+}
+h3{
+    position: center;
+}
+p{
+    position: center;
+}
+.input{
+    width: 100px;
+    padding: 15px 22px;
+    margin: 10px 5px;
+    box-sizing: border-box;  
+}

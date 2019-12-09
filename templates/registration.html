@@ -1,21 +1,20 @@
 {% extends "base.html"%}
 {%block content%}
+<p>Already have an account? <a href="/login">Login Now!</a></p>
 <form action ="/register" method= "POST">
 <label for="username" >Username</label>
-<input type="text" name="username">
+<input class="input" type="text" name="username">
 <span class="error">{{username_error}}</span>
 <br>
 <label for="password">Password</label>
-<input type="password" name="password">
+<input class="input" type="password" name="password">
 <span class="error">{{password_error}}</span>
 <br>
 <label for ="verify">Verify Password</label>
-<input type="password" name="verify">
+<input class="input" type="password" name="verify">
 <span class="error">{{verify_error}}</span>
 <br>
 <input type="submit" name="submit" value="Sign Up!">
-
-
 </form>
 
 {% endblock %}
