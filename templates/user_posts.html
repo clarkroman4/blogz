@@ -1,0 +1,11 @@
+{% extends "base.html"%}
+
+{% block content%}
+
+<h2>You are viewing all posts by {{username}}</h2>
+{%for user_post in user_posts%}
+<h3>{{user_post.title}}</h3>
+<p>{{user_post.content}}</p>
+<p>Post written by:<a href="/all-posts?username={{username}}">{{username}}</a></p>
+{% endfor %}
+{% endblock content%}

@@ -10,9 +10,22 @@
         </style>        
 </head>
 <body>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}
     <div>
-            <a href= "/">Main Page</a>
+        <a href= "/">All Users</a>
+        <a href="/all-posts">All Posts</a>
         <a href= "/add-new">Add New Post</a>
+        <a href= "/login">Login</a>
+        <a href="/logout">Logout</a>
+        <a href="/register">Register</a>
         <h1>Blog(with a Z)</h1>
     </div>
     {%block content%}

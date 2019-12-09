@@ -3,16 +3,37 @@ from app import db, app
 from models import Post, User
 from hashutils import check_hash, make_hash, make_salt
 
+@app.before_request
+def require_login():
+    allowed_routes = ["register", "login", "all_posts", "index"]
+    if request.endpoint not in allowed_routes and "username" not in session:
+        return redirect ("/login")
+
 @app.route("/")
 def index():
+    users = User.query.all()
+    return render_template("main_page.html", users=users)
+
+@app.route('/all-posts', methods=['POST','GET'])
+def all_posts():
+
+    users = User.query.all()
 
     if request.args.get("id") != None:
-        id = request.args.get("id")
+        id = request.args.get("id") 
         post = Post.query.get(id)
-        return render_template("post.html", post=post)
-    else:   
+        return render_template("post.html", post=post, users=users)
+
+    if request.args.get("username") != None:
+        username = request.args.get("username")
+        owner = User.query.filter_by(username=username).first()
+        user_posts = Post.query.filter_by(owner_id=owner.id).all()
+        return render_template("user_posts.html", user_posts=user_posts, username=username)
+
+    else:
         posts = Post.query.all()
-        return render_template("main_page.html", posts=posts)
+        users = User.query.all()
+        return render_template('all_posts.html', posts=posts, users = users)
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -37,12 +58,26 @@ def register():
         if username_error and password_error and verify_error:
             return render_template("registration.html", username_error = username_error, password_error=password_error, verify_error=verify_error, username=username)
         else:
-            new_user = User(username,password)
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect ("/add-new")
+            existing_user = User.query.filter_by(username=username).first()
+            if not existing_user:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                session["username"] = username
+                flash("Welcome!")
+                return redirect("/add-new")
+            else:
+                flash("Duplicate User. Please login.")
+                return redirect("/login")
     else:
         return render_template("registration.html")
+
+@app.route("/logout")
+def logout():
+    del session["username"]
+    flash("Logged Out")
+    return redirect("/")
+
 
 @app.route("/login", methods=["POST","GET"])
 def login():
@@ -55,14 +90,20 @@ def login():
             flash("Logged In!")
             return redirect('/add-new')
         else:
-            error = "User does not exist of user password incorrect"
-            return render_template("login.html", error=error)
+            if user == None:
+                error = "User does not exist. Please register a new user."
+                return render_template("login.html", error=error)
+            else:
+                error = "Password incorrect."
+                return render_template("login.html", error=error)
     else:
         error=""
         return render_template("login.html")
+        
 @app.route("/add-new", methods = ["POST", "GET"])
 def new():
     error = ""
+    owner = User.query.filter_by(username=session['username']).first()
     if request.method =="POST":
         title = request.form["title"]
         content = request.form["content"] 
@@ -76,7 +117,7 @@ def new():
             error = "Please add content to your post!"
             return render_template("new_post.html", error=error, title=title, content=content)
         else:
-            post = Post(title, content)
+            post = Post(title, content, owner)
             db.session.add(post)
             db.session.commit()
             return render_template("post.html", post=post)

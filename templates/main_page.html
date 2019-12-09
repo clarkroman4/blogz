@@ -2,11 +2,8 @@
 
 {%block content%}
 
-    {% for post in posts%}
-    <h2><a href="/?id={{post.id}}">{{post.title}}</a></h2>
-    <main>
-        <p>{{post.content}}</p>
-    </main>
+    {% for user in users%}
+    <p><a href="/all-posts?username={{user.username}}">{{user.username}}</a></p>
     {% endfor %}
 
 {%endblock content%}

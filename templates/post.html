@@ -2,11 +2,16 @@
 
 {%block content%}
 
-    
+
 <h2>{{ post.title }}</h2>
 <main>
     <p>{{post.content}}</p>
 </main>
+{%for user in users%}
+{%if user.id == post.owner_id %}
+<p><em>See all posts by <a href="/all-posts?username={{user.username}}">{{user.username}}</a></em></p>
+{% endif %}
+{% endfor %}
 
 
 {%endblock content%}
